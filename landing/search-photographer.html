@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Busca fotógrafos profesionales en tu zona - LuxArs">
+    <title>Buscar Fotógrafo - LuxArs</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/search.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <svg class="logo" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="20" cy="20" r="18" fill="none" stroke="#E60D0D" stroke-width="2"/>
+                    <circle cx="20" cy="18" r="5" fill="#E60D0D"/>
+                    <circle cx="28" cy="28" r="3" fill="#E60D0D"/>
+                </svg>
+                <a href="index.html" class="brand-text">LuxArs</a>
+            </div>
+            <nav class="navbar-nav">
+                <a href="index.html" class="nav-link">Inicio</a>
+                <a href="login.html" class="nav-link">Mi Cuenta</a>
+            </nav>
+            <div class="navbar-actions">
+                <a href="login.html" class="btn btn-secondary">Mi Cuenta</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Search Hero -->
+        <section class="search-hero">
+            <div class="search-hero-content">
+                <h1>Encuentra tu Fotógrafo Perfecto</h1>
+                <p>Busca por estilo, presupuesto y ubicación</p>
+                
+                <div class="search-form-container">
+                    <form class="search-form" onsubmit="handleSearch(event)">
+                        <div class="search-input-group">
+                            <input 
+                                type="text" 
+                                placeholder="Ej: Fotografía de bodas en Madrid" 
+                                id="search-query"
+                                aria-label="Buscar fotógrafo"
+                            >
+                            <button type="submit" class="btn btn-primary">🔍 Buscar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filters Sidebar -->
+        <div class="search-container">
+            <aside class="filters-sidebar">
+                <h3>Filtros</h3>
+                
+                <div class="filter-group">
+                    <h4>Especialidad</h4>
+                    <label class="filter-checkbox">
+                        <input type="checkbox" value="bodas" onchange="applyFilters()">
+                        <span>Bodas</span>
+                    </label>
+                    <label class="filter-checkbox">
+                        <input type="checkbox" value="eventos" onchange="applyFilters()">
+                        <span>Eventos</span>
+                    </label>
+                    <label class="filter-checkbox">
+                        <input type="checkbox" value="retratos" onchange="applyFilters()">
+                        <span>Retratos</span>
+                    </label>
+                    <label class="filter-checkbox">
+                        <input type="checkbox" value="producto" onchange="applyFilters()">
+                        <span>Producto</span>
+                    </label>
+                    <label class="filter-checkbox">
+                        <input type="checkbox" value="arquitectura" onchange="applyFilters()">
+                        <span>Arquitectura</span>
+                    </label>
+                </div>
+
+                <div class="filter-group">
+                    <h4>Presupuesto</h4>
+                    <label class="filter-checkbox">
+                        <input type="checkbox" value="budget-low" onchange="applyFilters()">
+                        <span>$ Bajo (< €300)</span>
+                    </label>
+                    <label class="filter-checkbox">
+                        <input type="checkbox" value="budget-mid" onchange="applyFilters()">
+                        <span>$$ Medio (€300-800)</span>
+                    </label>
+                    <label class="filter-checkbox">
+                        <input type="checkbox" value="budget-high" onchange="applyFilters()">
+                        <span>$$$ Alto (> €800)</span>
+                    </label>
+                </div>
+
+                <div class="filter-group">
+                    <h4>Calificación Mínima</h4>
+                    <div class="rating-slider">
+                        <input type="range" id="rating-slider" min="0" max="5" step="0.5" value="0" onchange="applyFilters()">
+                        <span id="rating-value">Todas</span>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <h4>Disponibilidad</h4>
+                    <label class="filter-checkbox">
+                        <input type="checkbox" value="available" onchange="applyFilters()">
+                        <span>Disponible esta semana</span>
+                    </label>
+                    <label class="filter-checkbox">
+                        <input type="checkbox" value="urgent" onchange="applyFilters()">
+                        <span>Disponible hoy</span>
+                    </label>
+                </div>
+
+                <button class="btn btn-secondary btn-block" onclick="resetFilters()">Limpiar Filtros</button>
+            </aside>
+
+            <!-- Results -->
+            <section class="search-results">
+                <div class="results-header">
+                    <h2>Fotógrafos Disponibles</h2>
+                    <p class="results-count" id="results-count">Mostrando fotógrafos destacados</p>
+                </div>
+
+                <div class="photographers-grid" id="photographers-grid">
+                    <!-- Photographer Cards -->
+                    <div class="photographer-card">
+                        <div class="photo-header">
+                            <img loading="lazy" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=300&fit=crop&q=80" alt="María Rodríguez - Fotógrafa de bodas">
+                            <div class="photo-badge">⭐ 4.9 (45 reseñas)</div>
+                        </div>
+                        <div class="photo-info">
+                            <h3>María Rodríguez</h3>
+                            <p class="photo-specialty">Bodas & Compromisos</p>
+                            <p class="photo-location">📍 Madrid, España</p>
+                            <div class="photo-price">€600 - €1,200</div>
+                            <p class="photo-description">Especialista en capturar momentos emotivos de bodas con estilo documental.</p>
+                            <div class="photo-tags">
+                                <span class="tag">Bodas</span>
+                                <span class="tag">Compromisos</span>
+                                <span class="tag">Edición Incluida</span>
+                            </div>
+                            <button class="btn btn-primary btn-block" onclick="contactPhotographer('María Rodríguez')">Ver Perfil</button>
+                        </div>
+                    </div>
+
+                    <div class="photographer-card">
+                        <div class="photo-header">
+                            <img loading="lazy" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop&q=80" alt="Carlos Fernández - Fotógrafo de eventos">
+                            <div class="photo-badge">⭐ 4.8 (32 reseñas)</div>
+                        </div>
+                        <div class="photo-info">
+                            <h3>Carlos Fernández</h3>
+                            <p class="photo-specialty">Eventos Corporativos</p>
+                            <p class="photo-location">📍 Barcelona, España</p>
+                            <div class="photo-price">€400 - €900</div>
+                            <p class="photo-description">Profesional en captura de eventos corporativos, conferencias y celebraciones.</p>
+                            <div class="photo-tags">
+                                <span class="tag">Eventos</span>
+                                <span class="tag">Corporativo</span>
+                                <span class="tag">Streaming Disponible</span>
+                            </div>
+                            <button class="btn btn-primary btn-block" onclick="contactPhotographer('Carlos Fernández')">Ver Perfil</button>
+                        </div>
+                    </div>
+
+                    <div class="photographer-card">
+                        <div class="photo-header">
+                            <img loading="lazy" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=300&fit=crop&q=80" alt="Ana López - Retratista profesional">
+                            <div class="photo-badge">⭐ 5.0 (28 reseñas)</div>
+                        </div>
+                        <div class="photo-info">
+                            <h3>Ana López García</h3>
+                            <p class="photo-specialty">Retratos Profesionales</p>
+                            <p class="photo-location">📍 Valencia, España</p>
+                            <div class="photo-price">€150 - €400</div>
+                            <p class="photo-description">Retratos profesionales y artísticos para CV, LinkedIn y proyectos personales.</p>
+                            <div class="photo-tags">
+                                <span class="tag">Retratos</span>
+                                <span class="tag">LinkedIn</span>
+                                <span class="tag">Maquillaje Incluido</span>
+                            </div>
+                            <button class="btn btn-primary btn-block" onclick="contactPhotographer('Ana López García')">Ver Perfil</button>
+                        </div>
+                    </div>
+
+                    <div class="photographer-card">
+                        <div class="photo-header">
+                            <img loading="lazy" src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=300&fit=crop&q=80" alt="Diego Martínez - Fotografía de producto">
+                            <div class="photo-badge">⭐ 4.7 (38 reseñas)</div>
+                        </div>
+                        <div class="photo-info">
+                            <h3>Diego Martínez</h3>
+                            <p class="photo-specialty">Fotografía de Producto</p>
+                            <p class="photo-location">📍 Bilbao, España</p>
+                            <div class="photo-price">€200 - €600</div>
+                            <p class="photo-description">Fotografía de producto para e-commerce, catálogos y redes sociales.</p>
+                            <div class="photo-tags">
+                                <span class="tag">Producto</span>
+                                <span class="tag">E-commerce</span>
+                                <span class="tag">Post-producción Incluida</span>
+                            </div>
+                            <button class="btn btn-primary btn-block" onclick="contactPhotographer('Diego Martínez')">Ver Perfil</button>
+                        </div>
+                    </div>
+
+                    <div class="photographer-card">
+                        <div class="photo-header">
+                            <img loading="lazy" src="https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=300&fit=crop&q=80" alt="Patricia Sánchez - Fotógrafa de bodas">
+                            <div class="photo-badge">⭐ 4.9 (52 reseñas)</div>
+                        </div>
+                        <div class="photo-info">
+                            <h3>Patricia Sánchez</h3>
+                            <p class="photo-specialty">Bodas y Compromisos</p>
+                            <p class="photo-location">📍 Sevilla, España</p>
+                            <div class="photo-price">€700 - €1,500</div>
+                            <p class="photo-description">Experiencia en bodas tradicionales y modernas con estilo artístico único.</p>
+                            <div class="photo-tags">
+                                <span class="tag">Bodas</span>
+                                <span class="tag">Arte</span>
+                                <span class="tag">Dron Disponible</span>
+                            </div>
+                            <button class="btn btn-primary btn-block" onclick="contactPhotographer('Patricia Sánchez')">Ver Perfil</button>
+                        </div>
+                    </div>
+
+                    <div class="photographer-card">
+                        <div class="photo-header">
+                            <img loading="lazy" src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=400&h=300&fit=crop&q=80" alt="Roberto Jiménez - Fotógrafo artístico">
+                            <div class="photo-badge">⭐ 4.8 (25 reseñas)</div>
+                        </div>
+                        <div class="photo-info">
+                            <h3>Roberto Jiménez</h3>
+                            <p class="photo-specialty">Fotografía Artística</p>
+                            <p class="photo-location">📍 Granada, España</p>
+                            <div class="photo-price">€250 - €700</div>
+                            <p class="photo-description">Retratos artísticos y sesiones de moda con enfoque creativo contemporáneo.</p>
+                            <div class="photo-tags">
+                                <span class="tag">Arte</span>
+                                <span class="tag">Moda</span>
+                                <span class="tag">Estudio Disponible</span>
+                            </div>
+                            <button class="btn btn-primary btn-block" onclick="contactPhotographer('Roberto Jiménez')">Ver Perfil</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pagination">
+                    <button class="btn btn-secondary" disabled>← Anterior</button>
+                    <span>Página 1 de 5</span>
+                    <button class="btn btn-secondary" onclick="nextPage()">Siguiente →</button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>LuxArs</h4>
+                <ul>
+                    <li><a href="#">Sobre Nosotros</a></li>
+                    <li><a href="#">Blog</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Términos de Servicio</a></li>
+                    <li><a href="#">Política de Privacidad</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 LuxArs. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="assets/js/search.js" defer></script>
+</body>
+</html>
