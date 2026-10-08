@@ -77,22 +77,28 @@ landing/
 
 ## 🚀 Cómo Usar
 
-### Desarrollo Local
+### Desarrollo Local con Node.js
 
-1. **Clonar o descargar el proyecto:**
+1. **Clonar o descargar el proyecto y entrar a la carpeta:**
 ```bash
-cd landing
+cd LuxArs
 ```
 
-2. **Abrir en navegador:**
+2. **Instalar las dependencias:**
 ```bash
-# Opción 1: Abrir index.html directamente
-open index.html
-
-# Opción 2: Usar un servidor local (recomendado)
-python -m http.server 8000
-# Luego acceder a: http://localhost:8000
+npm install
 ```
+
+3. **Iniciar el servidor:**
+```bash
+npm start
+# Desarrollo con reinicio automático:
+npm run dev
+```
+
+Luego accede a `http://localhost:3000`. El servidor Express sirve las páginas
+estáticas y expone `GET /api/health` para comprobar su estado y
+`POST /api/newsletter` para registrar suscripciones.
 
 ### Personalización
 
@@ -304,4 +310,3 @@ git subtree push --prefix landing origin gh-pages
 3. ✅ A/B testing de CTAs
 4. ✅ Blog integrado para SEO
 5. ✅ Sistema de comentarios en testimonios
-

@@ -16,22 +16,18 @@ open index.html
 xdg-open index.html
 ```
 
-### Opción 2: Servidor Local (Recomendado)
+### Opción 2: Servidor Node.js (Recomendado)
 
 ```bash
-# Python 3
-cd landing
-python -m http.server 8000
+# Instalar dependencias
+npm install
 
-# Luego acceder a: http://localhost:8000
+# Iniciar el servidor
+npm start
 ```
 
-```bash
-# Con Node.js / NPM
-cd landing
-npm install -g http-server
-http-server -p 8000
-```
+Luego acceder a `http://localhost:3000`. El endpoint `GET /api/health` permite verificar
+el estado del servidor y el formulario de newsletter utiliza `POST /api/newsletter`.
 
 ---
 
@@ -344,4 +340,3 @@ http://localhost:8000
 **Documentación:** Completa
 
 🚀 **¡Tu Landing Page está lista!** 🚀
-

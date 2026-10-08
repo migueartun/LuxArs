@@ -9,6 +9,7 @@
 const hamburguer = document.getElementById('hamburger');
 const navbarNav = document.querySelector('.navbar-nav');
 let currentFilter = 'todos';
+let countersInitialized = false;
 
 // ===========================
 // INICIALIZACIÓN
@@ -17,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeEvents();
     setupLazyLoading();
     setupIntersectionObserver();
+    setupCounters();
     logPerformanceMetrics();
 });
 
@@ -35,13 +37,17 @@ function initializeEvents() {
 }
 
 function toggleMobileMenu() {
-    navbarNav.classList.toggle('active');
-    hamburguer.classList.toggle('active');
+    const isOpen = navbarNav.classList.toggle('active');
+    hamburguer.classList.toggle('active', isOpen);
+    hamburguer.setAttribute('aria-expanded', String(isOpen));
+    hamburguer.setAttribute('aria-label', isOpen ? 'Cerrar menú de navegación' : 'Abrir menú de navegación');
 }
 
 function closeMobileMenu() {
     navbarNav.classList.remove('active');
     hamburguer.classList.remove('active');
+    hamburguer.setAttribute('aria-expanded', 'false');
+    hamburguer.setAttribute('aria-label', 'Abrir menú de navegación');
 }
 
 // ===========================
@@ -87,8 +93,75 @@ function setupIntersectionObserver() {
     }, observerOptions);
 
     // Observar elementos con clases específicas
-    document.querySelectorAll('.problema-card, .paso, .beneficio-card, .testimonio-card, .galeria-card').forEach(el => {
+    document.querySelectorAll('.problema-card, .paso, .beneficio-card, .testimonio-card, .galeria-card, .categoria-card, .faq-item, .trust-stat').forEach(el => {
         observer.observe(el);
+    });
+}
+
+// ===========================
+// FAQ ACCORDION
+// ===========================
+function toggleFAQ(button) {
+    const item = button.parentElement;
+    const isOpen = item.classList.contains('faq-open');
+    
+    document.querySelectorAll('.faq-item').forEach(el => {
+        el.classList.remove('faq-open');
+    });
+    
+    if (!isOpen) {
+        item.classList.add('faq-open');
+    }
+}
+
+// ===========================
+// COUNTER ANIMATION
+// ===========================
+function setupCounters() {
+    const counterObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && !countersInitialized) {
+                countersInitialized = true;
+                animateCounters();
+                counterObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    const statsSection = document.querySelector('.trust-bar');
+    if (statsSection) {
+        counterObserver.observe(statsSection);
+    }
+}
+
+function animateCounters() {
+    const counters = document.querySelectorAll('.trust-number[data-target]');
+    const duration = 2000;
+    
+    counters.forEach(counter => {
+        const target = parseInt(counter.dataset.target);
+        const step = Math.ceil(target / (duration / 16));
+        let current = 0;
+        
+        const updateCounter = () => {
+            current += step;
+            if (current < target) {
+                if (target > 1000) {
+                    counter.textContent = current.toLocaleString();
+                } else {
+                    counter.textContent = current;
+                }
+                requestAnimationFrame(updateCounter);
+            } else {
+                if (target > 1000) {
+                    counter.textContent = target.toLocaleString();
+                } else {
+                    counter.textContent = target;
+                }
+            }
+        };
+        
+        updateCounter();
     });
 }
 
@@ -160,32 +233,37 @@ function handleNewsletter(event) {
         return;
     }
 
-    // Simular envío (reemplazar con API real)
     const formData = {
         email: email,
         timestamp: new Date().toISOString(),
         source: 'landing_page'
     };
 
-    console.log('Newsletter subscription:', formData);
-    
-    // Aquí iría el fetch a tu API
-    // fetch('/api/newsletter', {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify(formData)
-    // })
-    // .then(response => response.json())
-    // .then(data => {
-    //     showNotification('¡Gracias por suscribirte!', 'success');
-    //     event.target.reset();
-    // })
-    // .catch(error => {
-    //     showNotification('Error al suscribirse. Intenta de nuevo.', 'error');
-    // });
+    const submitButton = event.target.querySelector('button[type="submit"]');
+    if (submitButton) submitButton.disabled = true;
 
-    showNotification('¡Gracias por suscribirte! Pronto recibirás noticias.', 'success');
-    event.target.reset();
+    fetch('/api/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('No se pudo completar la suscripción');
+            }
+            return response.json();
+        })
+        .then(() => {
+            showNotification('¡Gracias por suscribirte! Pronto recibirás noticias.', 'success');
+            event.target.reset();
+        })
+        .catch(error => {
+            console.error('Newsletter subscription error:', error);
+            showNotification('Error al suscribirse. Intenta de nuevo.', 'error');
+        })
+        .finally(() => {
+            if (submitButton) submitButton.disabled = false;
+        });
 }
 
 // ===========================
@@ -395,7 +473,8 @@ window.LuxArs = {
     handleCTAClick,
     handleNewsletter,
     scrollToSection,
-    showNotification
+    showNotification,
+    toggleFAQ
 };
 
 console.log('LuxArs Landing Page Script Loaded Successfully');

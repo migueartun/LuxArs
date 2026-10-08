@@ -11,33 +11,36 @@
     <meta name="og:type" content="website">
     
     <title>LuxArs - Marketplace de Fotografía Profesional | Conecta con Expertos</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="preload" as="style" href="assets/css/styles.css">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' fill='%23E60D0D'>📷</text></svg>">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='none' stroke='%23E60D0D' stroke-width='4'/%3E%3Ccircle cx='50' cy='45' r='12' fill='%23E60D0D'/%3E%3Ccircle cx='70' cy='70' r='8' fill='%23E60D0D'/%3E%3C/svg%3E">
 </head>
 <body>
     <!-- Navigation Header -->
     <header class="navbar">
         <div class="navbar-container">
-            <div class="navbar-brand">
+            <a class="navbar-brand" href="index.html" aria-label="LuxArs, inicio">
                 <svg class="logo" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="20" cy="20" r="18" fill="none" stroke="#E60D0D" stroke-width="2"/>
                     <circle cx="20" cy="18" r="5" fill="#E60D0D"/>
                     <circle cx="28" cy="28" r="3" fill="#E60D0D"/>
                 </svg>
                 <span class="brand-text">LuxArs</span>
-            </div>
-            <nav class="navbar-nav">
+            </a>
+            <nav class="navbar-nav" id="site-navigation">
+                <a href="#categorias" class="nav-link">Categorías</a>
                 <a href="#como-funciona" class="nav-link">¿Cómo Funciona?</a>
                 <a href="#beneficios" class="nav-link">Beneficios</a>
                 <a href="#testimonios" class="nav-link">Testimonios</a>
+                <a href="#faq" class="nav-link">FAQ</a>
                 <a href="#contacto" class="nav-link">Contacto</a>
             </nav>
             <div class="navbar-actions">
                 <a href="login.html" class="btn btn-secondary">Iniciar Sesión</a>
                 <a href="register.html" class="btn btn-primary">Registrarse</a>
             </div>
-            <button class="hamburger" id="hamburger">
+            <button class="hamburger" id="hamburger" type="button" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="site-navigation">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -49,35 +52,103 @@
         <!-- 1. HERO SECTION -->
         <section id="hero" class="hero">
             <div class="hero-background">
-                <video class="hero-video" autoplay muted loop playsinline poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 1080'%3E%3Crect fill='%231a1a1a' width='1920' height='1080'/%3E%3C/svg%3E">
+<video class="hero-video" autoplay muted loop playsinline poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 1080'%3E%3Crect fill='%231a1a1a' width='1920' height='1080'/%3E%3C/svg%3E">
                     <source src="data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc2gtYXZjMW1wNDEAAAAIZnJlZQAACKSbdWF0AAAC" type="video/mp4">
                 </video>
                 <div class="hero-overlay"></div>
+                <div class="hero-atmosphere">
+                    <div class="hero-fog-layer hero-fog-1"></div>
+                    <div class="hero-fog-layer hero-fog-2"></div>
+                    <div class="hero-fog-layer hero-fog-3"></div>
+                    <div class="hero-orb hero-orb-1"></div>
+                    <div class="hero-orb hero-orb-2"></div>
+                    <div class="hero-orb hero-orb-3"></div>
+                    <div class="hero-ray hero-ray-1"></div>
+                    <div class="hero-ray hero-ray-2"></div>
+                    <div class="hero-dust"></div>
+                    <div class="hero-dust"></div>
+                    <div class="hero-dust"></div>
+                    <div class="hero-dust"></div>
+                    <div class="hero-dust"></div>
+                    <div class="hero-dust"></div>
+                    <div class="hero-dust"></div>
+                </div>
             </div>
             
             <div class="hero-content">
-                <h1 class="hero-title">El punto de encuentro entre los mejores fotógrafos y tus momentos inolvidables</h1>
+                <div class="hero-kicker">
+                    <span class="hero-kicker-dot"></span>
+                    Marketplace premium de fotografía
+                </div>
+                <h1 class="hero-title">
+                    <span class="hero-title-line"><span>El punto de encuentro entre los mejores fotógrafos</span></span>
+                    <span class="hero-title-line"><span>y tus momentos inolvidables</span></span>
+                </h1>
+                <div class="hero-accent"></div>
                 <p class="hero-subtitle">Encuentra el estilo perfecto para tu evento o impulsa tu carrera como fotógrafo profesional</p>
                 
                 <div class="hero-cta">
                     <a href="search-photographer.html" class="btn btn-primary btn-large">
-                        <span class="btn-icon">🔍</span>
+                        <i class="bi bi-search btn-icon"></i>
                         Buscar Fotógrafo
                     </a>
                     <a href="become-photographer.html" class="btn btn-secondary btn-large">
-                        <span class="btn-icon">⭐</span>
+                        <i class="bi bi-star-fill btn-icon"></i>
                         Unirme como Fotógrafo
                     </a>
+                </div>
+                <div class="hero-proof">
+                    <div class="hero-proof-avatars" aria-hidden="true">
+                        <span>MR</span><span>CF</span><span>AL</span>
+                    </div>
+                    <p><strong>+2.500 profesionales verificados</strong><br>Listos para capturar tu historia</p>
                 </div>
             </div>
         </section>
 
-        <!-- 2. PROBLEMA / SOLUCIÓN SECTION -->
+        <!-- 2. STATS / TRUST BAR -->
+        <section class="trust-bar">
+            <div class="trust-bar-container">
+                <div class="trust-stat">
+                    <div class="trust-value">
+                        <span class="trust-number" data-target="2500">0</span>
+                        <span class="trust-suffix">+</span>
+                    </div>
+                    <p class="trust-label">Fotógrafos Verificados</p>
+                </div>
+                <div class="trust-divider"></div>
+                <div class="trust-stat">
+                    <div class="trust-value">
+                        <span class="trust-number" data-target="45000">0</span>
+                        <span class="trust-suffix">+</span>
+                    </div>
+                    <p class="trust-label">Clientes Satisfechos</p>
+                </div>
+                <div class="trust-divider"></div>
+                <div class="trust-stat">
+                    <div class="trust-value">
+                        <span class="trust-number" data-target="2500000">0</span>
+                        <span class="trust-suffix">+</span>
+                    </div>
+                    <p class="trust-label">€ en Pagos Seguros</p>
+                </div>
+                <div class="trust-divider"></div>
+                <div class="trust-stat">
+                    <div class="trust-value">
+                        <span class="trust-number">4.9</span>
+                        <i class="bi bi-award-fill trust-star"></i>
+                    </div>
+                    <p class="trust-label">Calificación Promedio</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. PROBLEMA / SOLUCIÓN SECTION -->
         <section id="problema-solucion" class="problema-solucion">
             <h2 class="section-title">¿Por qué LuxArs?</h2>
             <div class="problema-grid">
                 <div class="problema-card">
-                    <div class="problema-icon cliente">👥</div>
+                    <div class="problema-icon cliente"><i class="bi bi-people-fill"></i></div>
                     <h3>Para Clientes</h3>
                     <p class="problema-titulo"><strong>Olvídate de buscar a ciegas en redes sociales</strong></p>
                     <ul class="problema-lista">
@@ -90,7 +161,7 @@
                 </div>
                 
                 <div class="problema-card">
-                    <div class="problema-icon fotografo">📸</div>
+                    <div class="problema-icon fotografo"><i class="bi bi-camera-fill"></i></div>
                     <h3>Para Fotógrafos</h3>
                     <p class="problema-titulo"><strong>Olvídate de la gestión informal</strong></p>
                     <ul class="problema-lista">
@@ -114,21 +185,21 @@
                     <div class="pasos-grid">
                         <div class="paso">
                             <div class="paso-numero">1</div>
-                            <div class="paso-icon">🔍</div>
+                            <div class="paso-icon"><i class="bi bi-search"></i></div>
                             <h4>Explora Portafolios</h4>
                             <p>Busca por estilo, presupuesto y ubicación. Filtra fotógrafos especializados en bodas, eventos, retratos y más.</p>
                         </div>
                         
                         <div class="paso">
                             <div class="paso-numero">2</div>
-                            <div class="paso-icon">📅</div>
+                            <div class="paso-icon"><i class="bi bi-calendar-check-fill"></i></div>
                             <h4>Agenda una Fecha</h4>
                             <p>Selecciona disponibilidad, confirma detalles del servicio y realiza el pago de forma segura en la plataforma.</p>
                         </div>
                         
                         <div class="paso">
                             <div class="paso-numero">3</div>
-                            <div class="paso-icon">📸</div>
+                            <div class="paso-icon"><i class="bi bi-camera-fill"></i></div>
                             <h4>Recibe tus Fotos</h4>
                             <p>Después de la sesión, accede a tus fotos editadas directamente desde tu cuenta. Descarga en alta resolución.</p>
                         </div>
@@ -140,21 +211,21 @@
                     <div class="pasos-grid">
                         <div class="paso">
                             <div class="paso-numero">1</div>
-                            <div class="paso-icon">👤</div>
+                            <div class="paso-icon"><i class="bi bi-person-fill"></i></div>
                             <h4>Crea tu Perfil</h4>
                             <p>Regístrate con tus datos profesionales. Configura tu especialidad, tarifa y zona de cobertura.</p>
                         </div>
                         
                         <div class="paso">
                             <div class="paso-numero">2</div>
-                            <div class="paso-icon">🎨</div>
+                            <div class="paso-icon"><i class="bi bi-palette-fill"></i></div>
                             <h4>Sube tu Portafolio</h4>
                             <p>Exhibe tus mejores trabajos organizados por categoría. Nuestro sistema optimiza automáticamente la calidad visual.</p>
                         </div>
                         
                         <div class="paso">
                             <div class="paso-numero">3</div>
-                            <div class="paso-icon">⭐</div>
+                            <div class="paso-icon"><i class="bi bi-handshake"></i></div>
                             <h4>Conecta con Clientes</h4>
                             <p>Recibe solicitudes, gestiona tu agenda y cobra automáticamente. Construye tu reputación con calificaciones.</p>
                         </div>
@@ -163,7 +234,51 @@
             </div>
         </section>
 
-        <!-- 4. GALERÍA DE PORTAFOLIOS / DESTACADOS -->
+        <!-- 5. CATEGORÍAS DE FOTOGRAFÍA -->
+        <section id="categorias" class="categorias">
+            <h2 class="section-title">Explora por Categoría</h2>
+            <p class="section-subtitle">Encuentra el especialista perfecto para cada ocasión</p>
+            <div class="categorias-grid">
+                <a href="search-photographer.html" class="categoria-card">
+                    <div class="categoria-icon"><i class="bi bi-heart-fill"></i></div>
+                    <h3>Bodas</h3>
+                    <p>El día más especial merece los mejores recuerdos</p>
+                    <span class="categoria-cta">Ver fotógrafos <i class="bi bi-arrow-right"></i></span>
+                </a>
+                <a href="search-photographer.html" class="categoria-card">
+                    <div class="categoria-icon"><i class="bi bi-music-note-beamed"></i></div>
+                    <h3>Eventos</h3>
+                    <p>Conciertos, conferencias y celebraciones</p>
+                    <span class="categoria-cta">Ver fotógrafos <i class="bi bi-arrow-right"></i></span>
+                </a>
+                <a href="search-photographer.html" class="categoria-card">
+                    <div class="categoria-icon"><i class="bi bi-person-badge"></i></div>
+                    <h3>Retratos</h3>
+                    <p>Sesiones profesionales y artísticas</p>
+                    <span class="categoria-cta">Ver fotógrafos <i class="bi bi-arrow-right"></i></span>
+                </a>
+                <a href="search-photographer.html" class="categoria-card">
+                    <div class="categoria-icon"><i class="bi bi-box-seam"></i></div>
+                    <h3>Producto</h3>
+                    <p>Fotografía comercial para tu negocio</p>
+                    <span class="categoria-cta">Ver fotógrafos <i class="bi bi-arrow-right"></i></span>
+                </a>
+                <a href="search-photographer.html" class="categoria-card">
+                    <div class="categoria-icon"><i class="bi bi-building"></i></div>
+                    <h3>Arquitectura</h3>
+                    <p>Inmuebles, interiores y paisaje urbano</p>
+                    <span class="categoria-cta">Ver fotógrafos <i class="bi bi-arrow-right"></i></span>
+                </a>
+                <a href="search-photographer.html" class="categoria-card">
+                    <div class="categoria-icon"><i class="bi bi-tree-fill"></i></div>
+                    <h3>Naturaleza</h3>
+                    <p>Paisajes, fauna y fotografía al aire libre</p>
+                    <span class="categoria-cta">Ver fotógrafos <i class="bi bi-arrow-right"></i></span>
+                </a>
+            </div>
+        </section>
+
+        <!-- 6. GALERÍA DE PORTAFOLIOS / DESTACADOS -->
         <section id="galeria" class="galeria-destacados">
             <h2 class="section-title">Descubre Portafolios Destacados</h2>
             <p class="section-subtitle">Explora el trabajo de nuestros mejores fotógrafos profesionales</p>
@@ -204,7 +319,7 @@
                 <!-- Card 3: Retratos -->
                 <div class="galeria-card" data-categoria="retratos">
                     <div class="galeria-imagen">
-                        <img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Crect fill='%23B30808' width='300' height='300'/%3E%3Ctext x='50%25' y='50%25' font-size='48' fill='white' text-anchor='middle' dy='0.3em'%3E👤%3C/text%3E%3C/svg%3E" alt="Galería de retratos" data-src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&q=80">
+                        <img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Crect fill='%23B30808' width='300' height='300'/%3E%3C/svg%3E" alt="Galería de retratos" data-src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&q=80">
                     </div>
                     <div class="galeria-info">
                         <h4>Retratos Profesionales</h4>
@@ -256,37 +371,37 @@
             <h2 class="section-title">Características Principales</h2>
             <div class="beneficios-grid">
                 <div class="beneficio-card">
-                    <div class="beneficio-icon">🔍</div>
+                    <div class="beneficio-icon"><i class="bi bi-funnel-fill"></i></div>
                     <h3>Filtros Avanzados</h3>
                     <p>Busca por estilo fotográfico, presupuesto, ubicación y disponibilidad. Encuentra exactamente lo que necesitas en segundos.</p>
                 </div>
 
                 <div class="beneficio-card">
-                    <div class="beneficio-icon">📅</div>
+                    <div class="beneficio-icon"><i class="bi bi-calendar-check-fill"></i></div>
                     <h3>Gestión de Agenda en Tiempo Real</h3>
                     <p>Sistema de disponibilidad automático que evita conflictos de citas. Sincronización instantánea para fotógrafos y clientes.</p>
                 </div>
 
                 <div class="beneficio-card">
-                    <div class="beneficio-icon">🎨</div>
+                    <div class="beneficio-icon"><i class="bi bi-palette-fill"></i></div>
                     <h3>Portafolios Profesionales</h3>
                     <p>Espacio optimizado para exhibir tu trabajo en alta calidad sin perder resolución. Carga automática de galería y categorización.</p>
                 </div>
 
                 <div class="beneficio-card">
-                    <div class="beneficio-icon">💳</div>
+                    <div class="beneficio-icon"><i class="bi bi-credit-card-fill"></i></div>
                     <h3>Pagos Seguros e Inmediatos</h3>
                     <p>Sistema de pagos integrado con las mejores plataformas. Transacciones protegidas y liquidación instantánea para fotógrafos.</p>
                 </div>
 
                 <div class="beneficio-card">
-                    <div class="beneficio-icon">⭐</div>
+                    <div class="beneficio-icon"><i class="bi bi-chat-square-quote-fill"></i></div>
                     <h3>Sistema de Calificaciones</h3>
                     <p>Reputación verificada basada en experiencias reales. Comentarios y puntuaciones que generan confianza en ambos lados.</p>
                 </div>
 
                 <div class="beneficio-card">
-                    <div class="beneficio-icon">📱</div>
+                    <div class="beneficio-icon"><i class="bi bi-phone-fill"></i></div>
                     <h3>Plataforma 100% Responsive</h3>
                     <p>Experiencia perfecta en móvil, tablet y desktop. Diseñado mobile-first para comodidad de todos nuestros usuarios.</p>
                 </div>
@@ -298,10 +413,10 @@
             <h2 class="section-title">Lo que Dicen Nuestros Usuarios</h2>
             <div class="testimonios-grid">
                 <div class="testimonio-card">
-                    <div class="testimonio-stars">⭐⭐⭐⭐⭐</div>
+                    <div class="testimonio-stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></div>
                     <p class="testimonio-texto">"Encontré el fotógrafo perfecto para mi boda en menos de 10 minutos. Profesional, puntual y el resultado fue espectacular. No puedo estar más satisfecho."</p>
                     <div class="testimonio-autor">
-                        <div class="autor-avatar">👰</div>
+                        <div class="autor-avatar"><i class="bi bi-person-heart"></i></div>
                         <div class="autor-info">
                             <p class="autor-nombre">Jessica Martínez</p>
                             <p class="autor-rol">Cliente - Fotografía de Bodas</p>
@@ -310,10 +425,10 @@
                 </div>
 
                 <div class="testimonio-card">
-                    <div class="testimonio-stars">⭐⭐⭐⭐⭐</div>
+                    <div class="testimonio-stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></div>
                     <p class="testimonio-texto">"LuxArs multiplicó mis contratos mensuales. La plataforma es fácil de usar y los clientes que llegan ya tienen confianza en mi trabajo. Excelente negocio."</p>
                     <div class="testimonio-autor">
-                        <div class="autor-avatar">📸</div>
+                        <div class="autor-avatar"><i class="bi bi-camera-fill"></i></div>
                         <div class="autor-info">
                             <p class="autor-nombre">Luis González</p>
                             <p class="autor-rol">Fotógrafo Profesional</p>
@@ -322,14 +437,66 @@
                 </div>
 
                 <div class="testimonio-card">
-                    <div class="testimonio-stars">⭐⭐⭐⭐⭐</div>
+                    <div class="testimonio-stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></div>
                     <p class="testimonio-texto">"Como empresa, necesitábamos fotos de producto urgentemente. LuxArs me conectó con Diego en horas. Proyecto completado a tiempo y con calidad profesional."</p>
                     <div class="testimonio-autor">
-                        <div class="autor-avatar">🏢</div>
+                        <div class="autor-avatar"><i class="bi bi-building-fill"></i></div>
                         <div class="autor-info">
                             <p class="autor-nombre">Empresa TechStyle</p>
                             <p class="autor-rol">Cliente Corporativo</p>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 9. PREGUNTAS FRECUENTES -->
+        <section id="faq" class="faq">
+            <h2 class="section-title">Preguntas Frecuentes</h2>
+            <div class="faq-container">
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFAQ(this)">
+                        <span>¿Cómo funciona el proceso de reserva?</span>
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Simplemente busca el fotógrafo que mejor se adapte a tu estilo y presupuesto, selecciona una fecha disponible en su calendario y realiza el pago. Recibirás confirmación inmediata y podrás comunicarte directamente con el profesional.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFAQ(this)">
+                        <span>¿Están verificados los fotógrafos?</span>
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Sí. Todos los fotógrafos pasan por un proceso de verificación de identidad y portafolio. Además, cada perfil muestra reseñas reales de clientes anteriores para que puedas tomar una decisión informada.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFAQ(this)">
+                        <span>¿Qué pasa si necesito cancelar una reserva?</span>
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Puedes cancelar con hasta 48 horas de anticipación para recibir un reembolso completo. Las cancelaciones dentro de las 48 horas están sujetas a la política del fotógrafo, que se muestra claramente antes de confirmar.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFAQ(this)">
+                        <span>¿Cómo recibo mis fotos después de la sesión?</span>
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Las fotos editadas se entregan a través de tu cuenta de LuxArs en formato digital de alta resolución, listas para descargar y compartir. El tiempo de entrega depende del fotógrafo y se especifica en los detalles del servicio.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="toggleFAQ(this)">
+                        <span>¿Puedo unirme como fotógrafo si soy principiante?</span>
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>¡Por supuesto! LuxArs está abierto a fotógrafos de todos los niveles. Solo necesitas un portafolio que demuestre tu calidad y estilo. A medida que completes trabajos, construirás tu reputación con las calificaciones de los clientes.</p>
                     </div>
                 </div>
             </div>
@@ -399,9 +566,9 @@
             <div class="footer-section">
                 <h4>Redes Sociales</h4>
                 <div class="social-links">
-                    <a href="#" aria-label="Instagram">📷</a>
-                    <a href="#" aria-label="Facebook">f</a>
-                    <a href="#" aria-label="LinkedIn">in</a>
+                    <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                    <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
                 </div>
             </div>
         </div>
