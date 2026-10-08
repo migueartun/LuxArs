@@ -96,7 +96,7 @@ npm start
 npm run dev
 ```
 
-Luego accede a `http://localhost:3000`. El servidor Express sirve las páginas
+Luego accede a `http://localhost:4000`. El servidor Express sirve las páginas
 estáticas y expone `GET /api/health` para comprobar su estado y
 `POST /api/newsletter` para registrar suscripciones.
 

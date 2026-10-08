@@ -26,7 +26,7 @@ npm install
 npm start
 ```
 
-Luego acceder a `http://localhost:3000`. El endpoint `GET /api/health` permite verificar
+Luego acceder a `http://localhost:4000`. El endpoint `GET /api/health` permite verificar
 el estado del servidor y el formulario de newsletter utiliza `POST /api/newsletter`.
 
 ---
