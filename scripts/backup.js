@@ -1,4 +1,5 @@
 const fs = require('node:fs');
+const crypto = require('node:crypto');
 const path = require('node:path');
 const archiver = require('archiver');
 require('dotenv').config();
@@ -8,15 +9,19 @@ const projectRoot = path.resolve(__dirname, '..');
 const backupDirectory = path.join(projectRoot, 'backups');
 const defaultBackupRecipient = 'migueartun@gmail.com';
 const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-const archiveName = `luxars-backup-${timestamp}.zip`;
+const zipName = `luxars-backup-${timestamp}.zip`;
+const zipPath = path.join(backupDirectory, zipName);
+const archiveName = `${zipName}.enc`;
 const archivePath = path.join(backupDirectory, archiveName);
+const snapshotDirectory = path.join(backupDirectory, `luxars-backup-${timestamp}`);
 const backupRecipient = process.env.BACKUP_EMAIL_TO || defaultBackupRecipient;
 
 const requiredEnvironment = [
     'SMTP_HOST',
     'SMTP_PORT',
     'SMTP_USER',
-    'SMTP_PASSWORD'
+    'SMTP_PASSWORD',
+    'BACKUP_ARCHIVE_PASSWORD'
 ];
 
 function validateEnvironment() {
@@ -29,19 +34,43 @@ function validateEnvironment() {
 function shouldInclude(entryPath) {
     const normalizedPath = entryPath.replace(/\\/g, '/');
     return ![
-        '.git/',
-        'node_modules/',
-        'backups/',
+        '.git',
+        'node_modules',
+        'backups',
         '.env',
         '.env.local'
-    ].some((excludedPath) => normalizedPath === excludedPath || normalizedPath.startsWith(excludedPath));
+    ].some((excludedPath) => normalizedPath === excludedPath || normalizedPath.startsWith(`${excludedPath}/`));
+}
+
+function createVisibleSnapshot() {
+    function copyDirectory(sourceDirectory, targetDirectory) {
+        fs.mkdirSync(targetDirectory, { recursive: true });
+
+        for (const entry of fs.readdirSync(sourceDirectory, { withFileTypes: true })) {
+            const sourcePath = path.join(sourceDirectory, entry.name);
+            const targetPath = path.join(targetDirectory, entry.name);
+            const relativePath = path.relative(projectRoot, sourcePath);
+
+            if (!shouldInclude(relativePath)) {
+                continue;
+            }
+
+            if (entry.isDirectory()) {
+                copyDirectory(sourcePath, targetPath);
+            } else {
+                fs.copyFileSync(sourcePath, targetPath);
+            }
+        }
+    }
+
+    copyDirectory(projectRoot, snapshotDirectory);
 }
 
 function createArchive() {
     return new Promise((resolve, reject) => {
         fs.mkdirSync(backupDirectory, { recursive: true });
 
-        const output = fs.createWriteStream(archivePath);
+        const output = fs.createWriteStream(zipPath);
         const archive = archiver('zip', { zlib: { level: 9 } });
 
         output.on('close', resolve);
@@ -59,6 +88,25 @@ function createArchive() {
         archive.directory(projectRoot, false, (entry) => shouldInclude(entry.name) ? entry : false);
         archive.finalize();
     });
+}
+
+function encryptArchive() {
+    const salt = crypto.randomBytes(16);
+    const iv = crypto.randomBytes(12);
+    const key = crypto.scryptSync(process.env.BACKUP_ARCHIVE_PASSWORD, salt, 32);
+    const cipher = crypto.createCipheriv('aes-256-gcm', key, iv);
+    const encrypted = Buffer.concat([cipher.update(fs.readFileSync(zipPath)), cipher.final()]);
+    const authTag = cipher.getAuthTag();
+    const payload = Buffer.concat([
+        Buffer.from('LUXARS1'),
+        salt,
+        iv,
+        authTag,
+        encrypted
+    ]);
+
+    fs.writeFileSync(archivePath, payload);
+    fs.rmSync(zipPath);
 }
 
 async function sendArchiveByEmail() {
@@ -83,7 +131,9 @@ async function sendArchiveByEmail() {
 
 async function main() {
     validateEnvironment();
+    createVisibleSnapshot();
     await createArchive();
+    encryptArchive();
     console.log(`Backup creado: ${archivePath}`);
 
     try {

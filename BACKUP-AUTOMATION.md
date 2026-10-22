@@ -2,9 +2,11 @@
 
 ## Objetivo
 
-El comando `npm run backup` genera un archivo ZIP con el proyecto y lo envia
-por correo electronico como archivo adjunto. Las credenciales SMTP se leen
-desde variables de entorno y nunca se guardan en el repositorio.
+El comando `npm run backup` genera un ZIP cifrado (`.zip.enc`) con el proyecto
+y lo envia por correo electronico como archivo adjunto. Las credenciales SMTP
+y la contraseña del archivo se leen desde variables de entorno y nunca se
+guardan en el repositorio. Ademas, cada ejecucion deja una copia visible en
+una carpeta local dentro de `backups/`.
 
 ## Como se agrego la funcionalidad
 
@@ -20,7 +22,9 @@ desde variables de entorno y nunca se guardan en el repositorio.
 3. Se creo `scripts/backup.js`. El script:
    - valida que existan las variables SMTP y el destinatario;
    - crea la carpeta `backups/` si no existe;
-   - genera un archivo con nombre `luxars-backup-fecha.zip`;
+   - genera un ZIP temporal y lo cifra con AES-256-GCM;
+   - elimina el ZIP temporal y conserva `luxars-backup-fecha.zip.enc`;
+   - crea `backups/luxars-backup-fecha/` con los archivos visibles del backup;
    - excluye `.git`, `node_modules`, `backups` y archivos `.env`;
    - conserva el ZIP aunque el envio falle;
    - informa el error y termina con codigo distinto de cero si el correo no
@@ -53,6 +57,7 @@ desde variables de entorno y nunca se guardan en el repositorio.
    $env:SMTP_SECURE = "true"
    $env:SMTP_USER = "cuenta@ejemplo.com"
    $env:SMTP_PASSWORD = "clave-de-aplicacion"
+   $env:BACKUP_ARCHIVE_PASSWORD = "una-clave-segura-para-el-backup"
    ```
 
    Para Gmail se debe usar una clave de aplicacion, no la contraseña
@@ -65,9 +70,14 @@ desde variables de entorno y nunca se guardan en el repositorio.
    npm run backup
    ```
 
-5. Confirmar que el ZIP aparezca en `backups/` y revisar la bandeja del
-   destinatario. El script muestra en consola si la creacion y el envio
-   fueron exitosos.
+5. Confirmar que el archivo `.zip.enc` aparezca en `backups/` y revisar la
+   bandeja del destinatario. El script muestra en consola si la creacion y el
+   envio fueron exitosos. Gmail no puede inspeccionar el contenido cifrado.
+   La carpeta con el mismo nombre sin `.zip.enc` permite revisar localmente
+   `assets`, `scripts`, `index.html` y los demas archivos incluidos.
+
+La contraseña `BACKUP_ARCHIVE_PASSWORD` es distinta de `SMTP_PASSWORD`.
+Consérvala en un gestor seguro: se necesita para recuperar el ZIP.
 
 ## Programar la ejecucion en Windows
 
@@ -83,6 +93,7 @@ $env:SMTP_PORT = "465"
 $env:SMTP_SECURE = "true"
 $env:SMTP_USER = "cuenta@ejemplo.com"
 $env:SMTP_PASSWORD = "clave-de-aplicacion"
+$env:BACKUP_ARCHIVE_PASSWORD = "una-clave-segura-para-el-backup"
 Set-Location "C:\ruta\a\LuxArs"
 npm run backup
 ```
