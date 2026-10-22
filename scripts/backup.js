@@ -6,6 +6,7 @@ const archiver = require('archiver');
 require('dotenv').config();
 const { MongoClient } = require('mongodb');
 const nodemailer = require('nodemailer');
+const { google } = require('googleapis');
 
 dns.setServers(['8.8.8.8', '1.1.1.1']);
 
@@ -19,7 +20,6 @@ const archiveName = `${zipName}.enc`;
 const archivePath = path.join(backupDirectory, archiveName);
 const snapshotDirectory = path.join(backupDirectory, `luxars-backup-${timestamp}`);
 const backupRecipient = process.env.BACKUP_EMAIL_TO || defaultBackupRecipient;
-const maxAttachmentBytes = Number(process.env.BACKUP_MAX_ATTACHMENT_MB || 18) * 1024 * 1024;
 
 const requiredEnvironment = [
     'SMTP_HOST',
@@ -27,7 +27,9 @@ const requiredEnvironment = [
     'SMTP_USER',
     'SMTP_PASSWORD',
     'BACKUP_ARCHIVE_PASSWORD',
-    'MONGODB_URI'
+    'MONGODB_URI',
+    'GOOGLE_DRIVE_FOLDER_ID',
+    'GOOGLE_SERVICE_ACCOUNT_JSON'
 ];
 
 function validateEnvironment() {
@@ -160,34 +162,45 @@ function encryptArchive() {
     fs.rmSync(zipPath);
 }
 
-function splitArchive() {
-    const archiveSize = fs.statSync(archivePath).size;
-    const partCount = Math.ceil(archiveSize / maxAttachmentBytes);
-
-    if (partCount === 1) {
-        return [{ path: archivePath, filename: archiveName }];
-    }
-
-    const archiveHandle = fs.openSync(archivePath, 'r');
-    const parts = [];
-
+async function uploadArchiveToDrive() {
+    let credentials;
     try {
-        for (let partNumber = 0; partNumber < partCount; partNumber += 1) {
-            const start = partNumber * maxAttachmentBytes;
-            const length = Math.min(maxAttachmentBytes, archiveSize - start);
-            const partName = `${archiveName}.part-${String(partNumber + 1).padStart(3, '0')}-of-${String(partCount).padStart(3, '0')}`;
-            const partPath = path.join(backupDirectory, partName);
-            const buffer = Buffer.alloc(length);
-
-            fs.readSync(archiveHandle, buffer, 0, length, start);
-            fs.writeFileSync(partPath, buffer);
-            parts.push({ path: partPath, filename: partName });
-        }
-    } finally {
-        fs.closeSync(archiveHandle);
+        credentials = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON);
+    } catch {
+        throw new Error('GOOGLE_SERVICE_ACCOUNT_JSON no contiene JSON válido');
     }
 
-    return parts;
+    const auth = new google.auth.GoogleAuth({
+        credentials,
+        scopes: ['https://www.googleapis.com/auth/drive.file']
+    });
+    const drive = google.drive({ version: 'v3', auth });
+    const { data: file } = await drive.files.create({
+        requestBody: {
+            name: archiveName,
+            parents: [process.env.GOOGLE_DRIVE_FOLDER_ID],
+            mimeType: 'application/octet-stream'
+        },
+        media: {
+            mimeType: 'application/octet-stream',
+            body: fs.createReadStream(archivePath)
+        },
+        fields: 'id, webViewLink, webContentLink',
+        supportsAllDrives: true
+    });
+
+    await drive.permissions.create({
+        fileId: file.id,
+        requestBody: {
+            type: 'user',
+            role: 'reader',
+            emailAddress: backupRecipient
+        },
+        sendNotificationEmail: true,
+        supportsAllDrives: true
+    });
+
+    return file.webViewLink || `https://drive.google.com/file/d/${file.id}/view`;
 }
 
 async function sendArchiveByEmail() {
@@ -201,22 +214,13 @@ async function sendArchiveByEmail() {
         }
     });
 
-    const parts = splitArchive();
-
-    for (let partNumber = 0; partNumber < parts.length; partNumber += 1) {
-        const part = parts[partNumber];
-        await transporter.sendMail({
-            from: process.env.SMTP_FROM || process.env.SMTP_USER,
-            to: backupRecipient,
-            subject: `Backup de LuxArs (${partNumber + 1}/${parts.length}) - ${new Date().toLocaleDateString('es-CO')}`,
-            text: parts.length === 1
-                ? 'Se adjunta el backup cifrado de LuxArs.'
-                : `Parte ${partNumber + 1} de ${parts.length}. Guarda todas las partes para reconstruir el archivo ${archiveName}.`,
-            attachments: [part]
-        });
-    }
-
-    return parts;
+    const driveLink = await uploadArchiveToDrive();
+    await transporter.sendMail({
+        from: process.env.SMTP_FROM || process.env.SMTP_USER,
+        to: backupRecipient,
+        subject: `Backup de LuxArs - ${new Date().toLocaleDateString('es-CO')}`,
+        text: `El backup cifrado fue subido a Google Drive. Acceso privado:\n${driveLink}`,
+    });
 }
 
 async function main() {
@@ -228,8 +232,8 @@ async function main() {
     console.log(`Backup creado: ${archivePath}`);
 
     try {
-        const sentParts = await sendArchiveByEmail();
-        console.log(`Backup enviado a: ${backupRecipient} (${sentParts.length} correo(s))`);
+        await sendArchiveByEmail();
+        console.log(`Enlace privado del backup enviado a: ${backupRecipient}`);
     } catch (error) {
         console.error(`El backup fue creado, pero no se pudo enviar por correo: ${error.message}`);
         process.exitCode = 1;
