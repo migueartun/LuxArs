@@ -26,6 +26,10 @@ si se instalo en otra ubicacion, se puede indicar:
 MONGODUMP_PATH=C:\ruta\MongoDB\Tools\100\bin\mongodump.exe
 ```
 
+El servidor importa este servicio desde `server.js` y programa su ejecucion
+automatica todos los dias a las 00:00 mediante `node-cron`. El proceso espera
+la promesa del backup y registra el error si MongoDB no esta disponible.
+
 ## Como se agrego la funcionalidad
 
 1. Se agregaron las dependencias `archiver` y `nodemailer` al

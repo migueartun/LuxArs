@@ -1,8 +1,20 @@
 const express = require('express');
+const cron = require('node-cron');
 const path = require('path');
+const backup = require('./servicios/backup.js');
 
 const app = express();
 const port = Number(process.env.PORT) || 4000;
+
+cron.schedule('0 0 0 * * *', async () => {
+    console.log('Realizando backup diario de la base de datos');
+
+    try {
+        await backup.backupDatabase();
+    } catch (error) {
+        console.error(`El backup programado falló: ${error.message}`);
+    }
+});
 
 app.use(express.json({ limit: '10kb' }));
 app.use(express.static(__dirname));
