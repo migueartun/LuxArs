@@ -55,9 +55,31 @@
         <!-- 1. HERO SECTION -->
         <section id="hero" class="hero">
             <div class="hero-background">
-<video class="hero-video" autoplay muted loop playsinline poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 1080'%3E%3Crect fill='%231a1a1a' width='1920' height='1080'/%3E%3C/svg%3E">
-                    <source src="data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc2gtYXZjMW1wNDEAAAAIZnJlZQAACKSbdWF0AAAC" type="video/mp4">
-                </video>
+                <div class="hero-carousel" role="region" aria-label="Historias capturadas por fotógrafos LuxArs">
+                    <div class="hero-carousel-track">
+                        <figure class="hero-carousel-slide is-active">
+                            <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=1400&h=1000&fit=crop&auto=format" alt="Pareja celebrando su boda al atardecer" fetchpriority="high">
+                            <figcaption><strong>Momentos que perduran</strong><span>Fotografía de bodas</span></figcaption>
+                        </figure>
+                        <figure class="hero-carousel-slide">
+                            <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=1400&h=1000&fit=crop&auto=format" alt="Retrato editorial de una modelo" loading="lazy">
+                            <figcaption><strong>Tu estilo, en foco</strong><span>Retratos y moda</span></figcaption>
+                        </figure>
+                        <figure class="hero-carousel-slide">
+                            <img src="https://images.unsplash.com/photo-1511578314322-379afb476865?w=1400&h=1000&fit=crop&auto=format" alt="Celebración con invitados en un evento" loading="lazy">
+                            <figcaption><strong>La energía de tu historia</strong><span>Eventos inolvidables</span></figcaption>
+                        </figure>
+                    </div>
+                    <div class="hero-carousel-controls">
+                        <button class="hero-carousel-button hero-carousel-prev" type="button" aria-label="Fotografía anterior">
+                            <i class="bi bi-arrow-left" aria-hidden="true"></i>
+                        </button>
+                        <div class="hero-carousel-dots" role="tablist" aria-label="Seleccionar fotografía"></div>
+                        <button class="hero-carousel-button hero-carousel-next" type="button" aria-label="Fotografía siguiente">
+                            <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
                 <div class="hero-overlay"></div>
                 <div class="hero-atmosphere">
                     <div class="hero-fog-layer hero-fog-1"></div>
@@ -292,6 +314,10 @@
                 <button class="filter-btn" onclick="filterGallery('eventos')">Eventos</button>
                 <button class="filter-btn" onclick="filterGallery('retratos')">Retratos</button>
                 <button class="filter-btn" onclick="filterGallery('producto')">Producto</button>
+                <button class="filter-btn" onclick="filterGallery('arquitectura')">Arquitectura</button>
+                <button class="filter-btn" onclick="filterGallery('moda')">Moda</button>
+                <button class="filter-btn" onclick="filterGallery('naturaleza')">Naturaleza</button>
+                <button class="filter-btn" onclick="filterGallery('gastronomia')">Gastronomía</button>
             </div>
             
             <div class="galeria-grid" id="galeria-grid">
@@ -303,7 +329,7 @@
                     <div class="galeria-info">
                         <h4>Fotografía de Bodas</h4>
                         <p class="fotografo-nombre">María Rodríguez</p>
-                        <a href="#" class="ver-perfil">Ver Perfil →</a>
+                        <a href="portfolio.html?profile=maria-rodriguez" class="ver-perfil">Ver Perfil →</a>
                     </div>
                 </div>
 
@@ -315,7 +341,7 @@
                     <div class="galeria-info">
                         <h4>Fotografía de Eventos</h4>
                         <p class="fotografo-nombre">Carlos Fernández</p>
-                        <a href="#" class="ver-perfil">Ver Perfil →</a>
+                        <a href="portfolio.html?profile=carlos-fernandez" class="ver-perfil">Ver Perfil →</a>
                     </div>
                 </div>
 
@@ -327,7 +353,7 @@
                     <div class="galeria-info">
                         <h4>Retratos Profesionales</h4>
                         <p class="fotografo-nombre">Ana López García</p>
-                        <a href="#" class="ver-perfil">Ver Perfil →</a>
+                        <a href="portfolio.html?profile=ana-lopez" class="ver-perfil">Ver Perfil →</a>
                     </div>
                 </div>
 
@@ -339,31 +365,55 @@
                     <div class="galeria-info">
                         <h4>Fotografía de Producto</h4>
                         <p class="fotografo-nombre">Diego Martínez</p>
-                        <a href="#" class="ver-perfil">Ver Perfil →</a>
+                        <a href="portfolio.html?profile=diego-martinez" class="ver-perfil">Ver Perfil →</a>
                     </div>
                 </div>
 
-                <!-- Card 5: Bodas -->
-                <div class="galeria-card" data-categoria="bodas">
+                <!-- Card 5: Arquitectura -->
+                <div class="galeria-card" data-categoria="arquitectura">
                     <div class="galeria-imagen">
-                        <img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Crect fill='%23E60D0D' width='300' height='300'/%3E%3Ctext x='50%25' y='50%25' font-size='48' fill='white' text-anchor='middle' dy='0.3em'%3E💍%3C/text%3E%3C/svg%3E" alt="Bodas y compromisos" data-src="https://images.unsplash.com/photo-1606011591411-07134e71a2a9?w=300&h=300&fit=crop&q=80">
+                        <img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Crect fill='%23E60D0D' width='300' height='300'/%3E%3Ctext x='50%25' y='50%25' font-size='48' fill='white' text-anchor='middle' dy='0.3em'%3E🏛️%3C/text%3E%3C/svg%3E" alt="Fotografía de arquitectura" data-src="https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=300&h=300&fit=crop&q=80">
                     </div>
                     <div class="galeria-info">
-                        <h4>Fotografía de Bodas</h4>
+                        <h4>Fotografía de Arquitectura</h4>
                         <p class="fotografo-nombre">Patricia Sánchez</p>
-                        <a href="#" class="ver-perfil">Ver Perfil →</a>
+                        <a href="portfolio.html?profile=patricia-sanchez" class="ver-perfil">Ver Perfil →</a>
                     </div>
                 </div>
 
-                <!-- Card 6: Retratos -->
-                <div class="galeria-card" data-categoria="retratos">
+                <!-- Card 6: Moda -->
+                <div class="galeria-card" data-categoria="moda">
                     <div class="galeria-imagen">
-                        <img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Crect fill='%23B30808' width='300' height='300'/%3E%3Ctext x='50%25' y='50%25' font-size='48' fill='white' text-anchor='middle' dy='0.3em'%3E🎬%3C/text%3E%3C/svg%3E" alt="Retratos artísticos" data-src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&h=300&fit=crop&q=80">
+                        <img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Crect fill='%23B30808' width='300' height='300'/%3E%3Ctext x='50%25' y='50%25' font-size='48' fill='white' text-anchor='middle' dy='0.3em'%3E👗%3C/text%3E%3C/svg%3E" alt="Fotografía de moda" data-src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=300&h=300&fit=crop&q=80">
                     </div>
                     <div class="galeria-info">
-                        <h4>Retratos Artísticos</h4>
+                        <h4>Fotografía de Moda</h4>
                         <p class="fotografo-nombre">Roberto Jiménez</p>
-                        <a href="#" class="ver-perfil">Ver Perfil →</a>
+                        <a href="portfolio.html?profile=roberto-jimenez" class="ver-perfil">Ver Perfil →</a>
+                    </div>
+                </div>
+
+                <!-- Card 7: Naturaleza -->
+                <div class="galeria-card" data-categoria="naturaleza">
+                    <div class="galeria-imagen">
+                        <img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Crect fill='%23CC0A0A' width='300' height='300'/%3E%3Ctext x='50%25' y='50%25' font-size='48' fill='white' text-anchor='middle' dy='0.3em'%3E🌿%3C/text%3E%3C/svg%3E" alt="Fotografía de naturaleza" data-src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=300&h=300&fit=crop&q=80">
+                    </div>
+                    <div class="galeria-info">
+                        <h4>Fotografía de Naturaleza</h4>
+                        <p class="fotografo-nombre">Laura Gómez</p>
+                        <a href="portfolio.html?profile=laura-gomez" class="ver-perfil">Ver Perfil →</a>
+                    </div>
+                </div>
+
+                <!-- Card 8: Gastronomía -->
+                <div class="galeria-card" data-categoria="gastronomia">
+                    <div class="galeria-imagen">
+                        <img loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Crect fill='%239A0606' width='300' height='300'/%3E%3Ctext x='50%25' y='50%25' font-size='48' fill='white' text-anchor='middle' dy='0.3em'%3E🍽️%3C/text%3E%3C/svg%3E" alt="Fotografía gastronómica" data-src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=300&h=300&fit=crop&q=80">
+                    </div>
+                    <div class="galeria-info">
+                        <h4>Fotografía Gastronómica</h4>
+                        <p class="fotografo-nombre">Andrés Torres</p>
+                        <a href="portfolio.html?profile=andres-torres" class="ver-perfil">Ver Perfil →</a>
                     </div>
                 </div>
             </div>

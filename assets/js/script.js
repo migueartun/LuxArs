@@ -16,11 +16,75 @@ let countersInitialized = false;
 // ===========================
 document.addEventListener('DOMContentLoaded', function() {
     initializeEvents();
+    initializeHeroCarousel();
     setupLazyLoading();
     setupIntersectionObserver();
     setupCounters();
     logPerformanceMetrics();
 });
+
+// ===========================
+// CARRUSEL DE PORTADA
+// ===========================
+function initializeHeroCarousel() {
+    const carousel = document.querySelector('.hero-carousel');
+    if (!carousel) return;
+
+    const slides = Array.from(carousel.querySelectorAll('.hero-carousel-slide'));
+    const dotsContainer = carousel.querySelector('.hero-carousel-dots');
+    const previousButton = carousel.querySelector('.hero-carousel-prev');
+    const nextButton = carousel.querySelector('.hero-carousel-next');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let currentIndex = 0;
+    let intervalId;
+
+    const goToSlide = (index) => {
+        slides[currentIndex].classList.remove('is-active');
+        dotsContainer.children[currentIndex].classList.remove('is-active');
+        dotsContainer.children[currentIndex].setAttribute('aria-selected', 'false');
+        currentIndex = (index + slides.length) % slides.length;
+        slides[currentIndex].classList.add('is-active');
+        dotsContainer.children[currentIndex].classList.add('is-active');
+        dotsContainer.children[currentIndex].setAttribute('aria-selected', 'true');
+    };
+
+    slides.forEach((slide, index) => {
+        const dot = document.createElement('button');
+        dot.className = 'hero-carousel-dot';
+        dot.type = 'button';
+        dot.setAttribute('role', 'tab');
+        dot.setAttribute('aria-label', `Mostrar fotografía ${index + 1}`);
+        dot.setAttribute('aria-selected', String(index === 0));
+        if (index === 0) dot.classList.add('is-active');
+        dot.addEventListener('click', () => goToSlide(index));
+        dotsContainer.appendChild(dot);
+    });
+
+    const stopAutoplay = () => window.clearInterval(intervalId);
+    const startAutoplay = () => {
+        stopAutoplay();
+        if (!reducedMotion.matches) {
+            intervalId = window.setInterval(() => goToSlide(currentIndex + 1), 5500);
+        }
+    };
+
+    previousButton.addEventListener('click', () => {
+        goToSlide(currentIndex - 1);
+        startAutoplay();
+    });
+    nextButton.addEventListener('click', () => {
+        goToSlide(currentIndex + 1);
+        startAutoplay();
+    });
+    carousel.addEventListener('mouseenter', stopAutoplay);
+    carousel.addEventListener('mouseleave', startAutoplay);
+    carousel.addEventListener('focusin', stopAutoplay);
+    carousel.addEventListener('focusout', startAutoplay);
+    if (typeof reducedMotion.addEventListener === 'function') {
+        reducedMotion.addEventListener('change', startAutoplay);
+    }
+    startAutoplay();
+}
 
 // ===========================
 // MENÚ HAMBURGUESA
