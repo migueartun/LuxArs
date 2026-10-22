@@ -9,6 +9,17 @@ guardan en el repositorio. Ademas, cada ejecucion deja una copia visible en
 una carpeta local dentro de `backups/`, incluyendo una exportacion JSON de
 MongoDB.
 
+El servicio independiente `servicios/backup.js` ejecuta `mongodump` para
+generar un respaldo nativo comprimido de la base `sample_mflix` en la carpeta
+`backup/`. Se ejecuta con:
+
+```bash
+npm run backup:mongodb
+```
+
+El servicio acepta `MONGO_URI` y, para mantener compatibilidad con la
+configuracion actual, tambien acepta `MONGODB_URI`.
+
 ## Como se agrego la funcionalidad
 
 1. Se agregaron las dependencias `archiver` y `nodemailer` al
