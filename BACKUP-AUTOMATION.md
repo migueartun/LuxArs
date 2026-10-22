@@ -6,7 +6,8 @@ El comando `npm run backup` genera un ZIP cifrado (`.zip.enc`) con el proyecto
 y lo envia por correo electronico como archivo adjunto. Las credenciales SMTP
 y la contraseña del archivo se leen desde variables de entorno y nunca se
 guardan en el repositorio. Ademas, cada ejecucion deja una copia visible en
-una carpeta local dentro de `backups/`.
+una carpeta local dentro de `backups/`, incluyendo una exportacion JSON de
+MongoDB.
 
 ## Como se agrego la funcionalidad
 
@@ -20,11 +21,13 @@ una carpeta local dentro de `backups/`.
    ```
 
 3. Se creo `scripts/backup.js`. El script:
-   - valida que existan las variables SMTP y el destinatario;
+   - valida que existan las variables SMTP, MongoDB y las contraseñas;
    - crea la carpeta `backups/` si no existe;
    - genera un ZIP temporal y lo cifra con AES-256-GCM;
    - elimina el ZIP temporal y conserva `luxars-backup-fecha.zip.enc`;
    - crea `backups/luxars-backup-fecha/` con los archivos visibles del backup;
+   - se conecta a MongoDB mediante `MONGODB_URI`;
+   - exporta cada coleccion como un archivo JSON dentro de `database/`;
    - excluye `.git`, `node_modules`, `backups` y archivos `.env`;
    - conserva el ZIP aunque el envio falle;
    - informa el error y termina con codigo distinto de cero si el correo no
@@ -58,6 +61,8 @@ una carpeta local dentro de `backups/`.
    $env:SMTP_USER = "cuenta@ejemplo.com"
    $env:SMTP_PASSWORD = "clave-de-aplicacion"
    $env:BACKUP_ARCHIVE_PASSWORD = "una-clave-segura-para-el-backup"
+   $env:MONGODB_URI = "mongodb://usuario:contraseña@localhost:27017/?authSource=admin"
+   $env:MONGODB_DB = "luxars"
    ```
 
    Para Gmail se debe usar una clave de aplicacion, no la contraseña
@@ -74,7 +79,8 @@ una carpeta local dentro de `backups/`.
    bandeja del destinatario. El script muestra en consola si la creacion y el
    envio fueron exitosos. Gmail no puede inspeccionar el contenido cifrado.
    La carpeta con el mismo nombre sin `.zip.enc` permite revisar localmente
-   `assets`, `scripts`, `index.html` y los demas archivos incluidos.
+   `assets`, `scripts`, `index.html`, `database/` y los demas archivos
+   incluidos.
 
 La contraseña `BACKUP_ARCHIVE_PASSWORD` es distinta de `SMTP_PASSWORD`.
 Consérvala en un gestor seguro: se necesita para recuperar el ZIP.
@@ -94,6 +100,8 @@ $env:SMTP_SECURE = "true"
 $env:SMTP_USER = "cuenta@ejemplo.com"
 $env:SMTP_PASSWORD = "clave-de-aplicacion"
 $env:BACKUP_ARCHIVE_PASSWORD = "una-clave-segura-para-el-backup"
+$env:MONGODB_URI = "mongodb://usuario:contraseña@localhost:27017/?authSource=admin"
+$env:MONGODB_DB = "luxars"
 Set-Location "C:\ruta\a\LuxArs"
 npm run backup
 ```

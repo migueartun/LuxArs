@@ -3,6 +3,7 @@ const crypto = require('node:crypto');
 const path = require('node:path');
 const archiver = require('archiver');
 require('dotenv').config();
+const { MongoClient } = require('mongodb');
 const nodemailer = require('nodemailer');
 
 const projectRoot = path.resolve(__dirname, '..');
@@ -21,7 +22,8 @@ const requiredEnvironment = [
     'SMTP_PORT',
     'SMTP_USER',
     'SMTP_PASSWORD',
-    'BACKUP_ARCHIVE_PASSWORD'
+    'BACKUP_ARCHIVE_PASSWORD',
+    'MONGODB_URI'
 ];
 
 function validateEnvironment() {
@@ -66,6 +68,38 @@ function createVisibleSnapshot() {
     copyDirectory(projectRoot, snapshotDirectory);
 }
 
+async function createMongoBackup() {
+    const client = new MongoClient(process.env.MONGODB_URI);
+    const databaseDirectory = path.join(snapshotDirectory, 'database');
+
+    try {
+        await client.connect();
+        const database = client.db(process.env.MONGODB_DB || undefined);
+        const collections = await database.listCollections().toArray();
+        fs.mkdirSync(databaseDirectory, { recursive: true });
+
+        for (const collectionInfo of collections) {
+            const documents = await database.collection(collectionInfo.name).find({}).toArray();
+            const fileName = `${collectionInfo.name.replace(/[^a-zA-Z0-9._-]/g, '_')}.json`;
+            fs.writeFileSync(
+                path.join(databaseDirectory, fileName),
+                JSON.stringify(documents, null, 2)
+            );
+        }
+
+        fs.writeFileSync(
+            path.join(databaseDirectory, 'manifest.json'),
+            JSON.stringify({
+                database: database.databaseName,
+                generatedAt: new Date().toISOString(),
+                collections: collections.map((collection) => collection.name)
+            }, null, 2)
+        );
+    } finally {
+        await client.close();
+    }
+}
+
 function createArchive() {
     return new Promise((resolve, reject) => {
         fs.mkdirSync(backupDirectory, { recursive: true });
@@ -85,7 +119,7 @@ function createArchive() {
         archive.on('error', reject);
 
         archive.pipe(output);
-        archive.directory(projectRoot, false, (entry) => shouldInclude(entry.name) ? entry : false);
+        archive.directory(snapshotDirectory, false);
         archive.finalize();
     });
 }
@@ -132,6 +166,7 @@ async function sendArchiveByEmail() {
 async function main() {
     validateEnvironment();
     createVisibleSnapshot();
+    await createMongoBackup();
     await createArchive();
     encryptArchive();
     console.log(`Backup creado: ${archivePath}`);
