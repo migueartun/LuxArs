@@ -79,12 +79,24 @@ async function createMongoBackup() {
         fs.mkdirSync(databaseDirectory, { recursive: true });
 
         for (const collectionInfo of collections) {
-            const documents = await database.collection(collectionInfo.name).find({}).toArray();
             const fileName = `${collectionInfo.name.replace(/[^a-zA-Z0-9._-]/g, '_')}.json`;
-            fs.writeFileSync(
-                path.join(databaseDirectory, fileName),
-                JSON.stringify(documents, null, 2)
-            );
+            const output = fs.createWriteStream(path.join(databaseDirectory, fileName));
+            let isFirstDocument = true;
+
+            output.write('[\n');
+            for await (const document of database.collection(collectionInfo.name).find({})) {
+                if (!isFirstDocument) {
+                    output.write(',\n');
+                }
+                isFirstDocument = false;
+                output.write(`  ${JSON.stringify(document)}`);
+            }
+            output.write('\n]\n');
+            await new Promise((resolve, reject) => {
+                output.on('finish', resolve);
+                output.on('error', reject);
+                output.end();
+            });
         }
 
         fs.writeFileSync(
