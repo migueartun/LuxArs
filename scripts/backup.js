@@ -1,10 +1,13 @@
 const fs = require('node:fs');
 const crypto = require('node:crypto');
+const dns = require('node:dns');
 const path = require('node:path');
 const archiver = require('archiver');
 require('dotenv').config();
 const { MongoClient } = require('mongodb');
 const nodemailer = require('nodemailer');
+
+dns.setServers(['8.8.8.8', '1.1.1.1']);
 
 const projectRoot = path.resolve(__dirname, '..');
 const backupDirectory = path.join(projectRoot, 'backups');
