@@ -18,7 +18,13 @@ npm run backup:mongodb
 ```
 
 El servicio acepta `MONGO_URI` y, para mantener compatibilidad con la
-configuracion actual, tambien acepta `MONGODB_URI`.
+configuracion actual, tambien acepta `MONGODB_URI`. En Windows busca
+automaticamente `mongodump.exe` en la instalacion habitual de MongoDB Tools;
+si se instalo en otra ubicacion, se puede indicar:
+
+```env
+MONGODUMP_PATH=C:\ruta\MongoDB\Tools\100\bin\mongodump.exe
+```
 
 ## Como se agrego la funcionalidad
 

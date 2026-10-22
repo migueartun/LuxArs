@@ -1,4 +1,5 @@
 const { execFile } = require('node:child_process');
+const fs = require('node:fs');
 const path = require('node:path');
 const { promisify } = require('node:util');
 
@@ -8,6 +9,23 @@ const execFileAsync = promisify(execFile);
 const dbName = process.env.MONGODB_DB || 'sample_mflix';
 const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI;
 const outputPath = path.resolve(__dirname, '..', 'backup');
+
+function resolveMongodumpPath() {
+    const candidates = [
+        process.env.MONGODUMP_PATH,
+        'C:\\Program Files\\MongoDB\\Tools\\100\\bin\\mongodump.exe',
+        'mongodump'
+    ].filter(Boolean);
+
+    const executable = candidates.find((candidate) => candidate === 'mongodump' || fs.existsSync(candidate));
+    if (!executable) {
+        throw new Error(
+            'No se encontró mongodump. Instala MongoDB Database Tools o configura MONGODUMP_PATH en .env'
+        );
+    }
+
+    return executable;
+}
 
 async function backupDatabase() {
     if (!mongoUri) {
@@ -25,7 +43,7 @@ async function backupDatabase() {
     ];
 
     try {
-        const { stdout, stderr } = await execFileAsync('mongodump', args, {
+        const { stdout, stderr } = await execFileAsync(resolveMongodumpPath(), args, {
             windowsHide: true,
             maxBuffer: 10 * 1024 * 1024
         });
