@@ -19,6 +19,7 @@ const archiveName = `${zipName}.enc`;
 const archivePath = path.join(backupDirectory, archiveName);
 const snapshotDirectory = path.join(backupDirectory, `luxars-backup-${timestamp}`);
 const backupRecipient = process.env.BACKUP_EMAIL_TO || defaultBackupRecipient;
+const maxAttachmentBytes = Number(process.env.BACKUP_MAX_ATTACHMENT_MB || 18) * 1024 * 1024;
 
 const requiredEnvironment = [
     'SMTP_HOST',
@@ -42,6 +43,7 @@ function shouldInclude(entryPath) {
         '.git',
         'node_modules',
         'backups',
+        'backup',
         '.env',
         '.env.local'
     ].some((excludedPath) => normalizedPath === excludedPath || normalizedPath.startsWith(`${excludedPath}/`));
@@ -158,6 +160,36 @@ function encryptArchive() {
     fs.rmSync(zipPath);
 }
 
+function splitArchive() {
+    const archiveSize = fs.statSync(archivePath).size;
+    const partCount = Math.ceil(archiveSize / maxAttachmentBytes);
+
+    if (partCount === 1) {
+        return [{ path: archivePath, filename: archiveName }];
+    }
+
+    const archiveHandle = fs.openSync(archivePath, 'r');
+    const parts = [];
+
+    try {
+        for (let partNumber = 0; partNumber < partCount; partNumber += 1) {
+            const start = partNumber * maxAttachmentBytes;
+            const length = Math.min(maxAttachmentBytes, archiveSize - start);
+            const partName = `${archiveName}.part-${String(partNumber + 1).padStart(3, '0')}-of-${String(partCount).padStart(3, '0')}`;
+            const partPath = path.join(backupDirectory, partName);
+            const buffer = Buffer.alloc(length);
+
+            fs.readSync(archiveHandle, buffer, 0, length, start);
+            fs.writeFileSync(partPath, buffer);
+            parts.push({ path: partPath, filename: partName });
+        }
+    } finally {
+        fs.closeSync(archiveHandle);
+    }
+
+    return parts;
+}
+
 async function sendArchiveByEmail() {
     const transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
@@ -169,13 +201,22 @@ async function sendArchiveByEmail() {
         }
     });
 
-    await transporter.sendMail({
-        from: process.env.SMTP_FROM || process.env.SMTP_USER,
-        to: backupRecipient,
-        subject: `Backup de LuxArs - ${new Date().toLocaleDateString('es-CO')}`,
-        text: 'Se adjunta el backup comprimido de LuxArs generado automáticamente.',
-        attachments: [{ filename: archiveName, path: archivePath }]
-    });
+    const parts = splitArchive();
+
+    for (let partNumber = 0; partNumber < parts.length; partNumber += 1) {
+        const part = parts[partNumber];
+        await transporter.sendMail({
+            from: process.env.SMTP_FROM || process.env.SMTP_USER,
+            to: backupRecipient,
+            subject: `Backup de LuxArs (${partNumber + 1}/${parts.length}) - ${new Date().toLocaleDateString('es-CO')}`,
+            text: parts.length === 1
+                ? 'Se adjunta el backup cifrado de LuxArs.'
+                : `Parte ${partNumber + 1} de ${parts.length}. Guarda todas las partes para reconstruir el archivo ${archiveName}.`,
+            attachments: [part]
+        });
+    }
+
+    return parts;
 }
 
 async function main() {
@@ -187,8 +228,8 @@ async function main() {
     console.log(`Backup creado: ${archivePath}`);
 
     try {
-        await sendArchiveByEmail();
-        console.log(`Backup enviado a: ${backupRecipient}`);
+        const sentParts = await sendArchiveByEmail();
+        console.log(`Backup enviado a: ${backupRecipient} (${sentParts.length} correo(s))`);
     } catch (error) {
         console.error(`El backup fue creado, pero no se pudo enviar por correo: ${error.message}`);
         process.exitCode = 1;
